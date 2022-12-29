@@ -1,0 +1,19 @@
+.auth__data {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: #cccccc;
+  width: 100%;
+  outline: none;
+  box-shadow: none;
+  margin-bottom: 30px;
+  padding: 25px 0 0;
+  border: 0;
+  border-bottom: 2px solid #CCCCCC;
+  background-color: transparent;
+}
+
+.auth__data:focus {
+    box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.3);
+  }

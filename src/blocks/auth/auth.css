@@ -1,0 +1,13 @@
+.auth {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    margin: 0 auto;
+    max-width: 358px;
+}
+
+@media screen and (max-width: 320px) {
+    .auth {
+      max-width: 260px;
+    }
+  }

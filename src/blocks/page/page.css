@@ -1,0 +1,8 @@
+.page {
+  max-width: 1280px;
+  min-height: 100vh;
+  font-family: 'Inter', 'Times New Roman';
+  color: #000000;
+  margin: 0 auto;
+  padding: 0;
+}

@@ -1,0 +1,18 @@
+.header__user-data {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-direction: row;
+}
+
+@media screen and (max-width: 500px) {
+  .header__user-data {
+    flex-direction: column-reverse;
+    align-items: flex-end;
+    margin: 0 20px 0 auto;
+    opacity: 1;
+    transition: visibility 0.3s linear, opacity 0.3s linear;
+    gap: 12px;
+  }
+}
