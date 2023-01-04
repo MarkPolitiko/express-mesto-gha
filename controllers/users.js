@@ -24,12 +24,12 @@ module.exports.getUsers = (req, res) => {
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
-    .then((user) => res.status(SUCCESS).send({ user })) // или data:user?
+    .then((user) => res.status(SUCCESS).send({ user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res
           .status(BAD_REQUEST)
-          .send({ message: 'Передан некорректный запрос' }); // здесь нужен next()?
+          .send({ message: 'Передан некорректный запрос' });
       }
       res
         .status(INTERNAL_SERVER_ERROR)
@@ -49,7 +49,7 @@ module.exports.getUserById = (req, res) => {
       if (err.name === 'ValidationError') {
         res
           .status(BAD_REQUEST)
-          .send({ message: 'Передан некорректный запрос' }); // здесь нужен next()?
+          .send({ message: 'Передан некорректный запрос' });
       }
       res
         .status(INTERNAL_SERVER_ERROR)
@@ -75,7 +75,7 @@ module.exports.updateUser = (req, res) => {
       if (err.name === 'ValidationError') {
         res
           .status(BAD_REQUEST)
-          .send({ message: 'Передан некорректный запрос' }); // здесь нужен next()?
+          .send({ message: 'Передан некорректный запрос' });
       }
       res
         .status(INTERNAL_SERVER_ERROR)
@@ -101,7 +101,7 @@ module.exports.updateAvatar = (req, res) => {
       if (err.name === 'ValidationError') {
         res
           .status(BAD_REQUEST)
-          .send({ message: 'Передан некорректный запрос' }); // здесь нужен next()?
+          .send({ message: 'Передан некорректный запрос' });
       }
       res
         .status(INTERNAL_SERVER_ERROR)

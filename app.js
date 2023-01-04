@@ -1,11 +1,12 @@
 const express = require('express');
-const path = require('path');
+// const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { PAGE_NOT_FOUND } = require('./utils/constants');
 
 const MONGODB_URL = 'mongodb://localhost:27017/mestodb';
 
-mongoose.set('strictQuery', false);
+mongoose.set('strictQuery', true);
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -17,10 +18,10 @@ mongoose.connect(MONGODB_URL, () => {
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 });
@@ -31,4 +32,8 @@ app.use((req, res, next) => {
   };
 
   next();
+});
+
+app.use('*', (req, res) => {
+  res.status(PAGE_NOT_FOUND).send({ message: 'Page not found' });
 });

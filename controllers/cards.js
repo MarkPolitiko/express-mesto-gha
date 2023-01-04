@@ -77,7 +77,7 @@ module.exports.likeCard = (req, res) => {
       if (err.name === 'ValidationError') {
         res
           .status(BAD_REQUEST)
-          .send({ message: 'Передан некорректный запрос' }); // здесь нужен next()?
+          .send({ message: 'Передан некорректный запрос' });
       }
       res
         .status(INTERNAL_SERVER_ERROR)
@@ -88,7 +88,7 @@ module.exports.likeCard = (req, res) => {
 module.exports.dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $pull: { likes: req.user._id } }, // убрать _id из массива
+    { $pull: { likes: req.user._id } },
     { new: true },
   ).then((card) => {
     if (!card) {
