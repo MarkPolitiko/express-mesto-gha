@@ -38,10 +38,11 @@ module.exports.createUser = (req, res) => {
 };
 
 module.exports.getUserById = (req, res) => {
-  User.findById(req.user.id)
+  User.findById(req.params.userId)
     .then((user) => {
-      if (!user) {
+      if (user === null) {
         res.status(PAGE_NOT_FOUND).send({ message: 'Данные не найдены' });
+        return;
       }
       res.status(SUCCESS).send({ user });
     })
@@ -50,6 +51,7 @@ module.exports.getUserById = (req, res) => {
         res
           .status(BAD_REQUEST)
           .send({ message: 'Передан некорректный запрос' });
+        return;
       }
       res
         .status(INTERNAL_SERVER_ERROR)
@@ -58,11 +60,9 @@ module.exports.getUserById = (req, res) => {
 };
 
 module.exports.updateUser = (req, res) => {
-  const { name, about } = req.body;
-
   User.findAndUpdate(
     req.user._id,
-    { name, about },
+    { name: req.body.name, about: req.body.about },
     { new: true, runValidators: true },
   )
     .then((user) => {
@@ -74,8 +74,7 @@ module.exports.updateUser = (req, res) => {
         res
           .status(BAD_REQUEST)
           .send({ message: 'Передан некорректный запрос' });
-      } else if (err.name === 'CastError') {
-        res.status(PAGE_NOT_FOUND).send({ message: 'Данные не найдены' });
+        return;
       }
       res
         .status(INTERNAL_SERVER_ERROR)
@@ -84,11 +83,9 @@ module.exports.updateUser = (req, res) => {
 };
 
 module.exports.updateAvatar = (req, res) => {
-  const { avatar } = req.body;
-
   User.findAndUpdate(
     req.user._id,
-    { avatar },
+    { avatar: req.body.avatar },
     { new: true, runValidators: true },
   )
     .then((user) => {
@@ -102,6 +99,7 @@ module.exports.updateAvatar = (req, res) => {
         res
           .status(BAD_REQUEST)
           .send({ message: 'Передан некорректный запрос' });
+        return;
       }
       res
         .status(INTERNAL_SERVER_ERROR)
