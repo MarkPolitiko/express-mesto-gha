@@ -10,9 +10,7 @@ module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => {
       if (!users) {
-        res
-          .status(BAD_REQUEST)
-          .send({ message: 'Передан некорректный запрос' });
+        res.status(PAGE_NOT_FOUND).send({ message: 'Данные не найдены' });
       }
       res.status(SUCCESS).send({ users });
     })
@@ -46,7 +44,7 @@ module.exports.getUserById = (req, res) => {
       res.status(SUCCESS).send({ user });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
         res
           .status(BAD_REQUEST)
           .send({ message: 'Передан некорректный запрос' });
@@ -66,16 +64,16 @@ module.exports.updateUser = (req, res) => {
     { new: true, runValidators: true },
   )
     .then((user) => {
-      if (!user) {
-        res.status(PAGE_NOT_FOUND).send({ message: 'Данные не найдены' });
-      }
-      res.status(SUCCESS).send({ user });
+      res
+        .status(SUCCESS).send({ user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res
           .status(BAD_REQUEST)
           .send({ message: 'Передан некорректный запрос' });
+      } else if (err.name === 'CastError') {
+        res.status(PAGE_NOT_FOUND).send({ message: 'Данные не найдены' });
       }
       res
         .status(INTERNAL_SERVER_ERROR)
