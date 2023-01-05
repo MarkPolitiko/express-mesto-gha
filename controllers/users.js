@@ -21,6 +21,7 @@ module.exports.getUsers = (req, res) => {
 
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
+
   User.create({ name, about, avatar })
     .then((user) => res.status(SUCCESS).send({ user }))
     .catch((err) => {
@@ -28,6 +29,7 @@ module.exports.createUser = (req, res) => {
         res
           .status(BAD_REQUEST)
           .send({ message: 'Передан некорректный запрос' });
+        return;
       }
       res
         .status(INTERNAL_SERVER_ERROR)
