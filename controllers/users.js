@@ -41,7 +41,7 @@ module.exports.getUserById = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (user === null) {
-        res.status(PAGE_NOT_FOUND).send({ message: 'Пользователь по указанному id не найден' });
+        res.status(PAGE_NOT_FOUND).send({ message: 'Пользователь с указанным id не найден' });
         return;
       }
       res.status(SUCCESS).send({ user });
@@ -90,7 +90,7 @@ module.exports.updateAvatar = (req, res) => {
   )
     .then((user) => {
       if (!user) {
-        res.status(PAGE_NOT_FOUND).send({ message: 'Данные не найдены' });
+        res.status(PAGE_NOT_FOUND).send({ message: 'Пользователь с указанным id не найден' });
       }
       res.status(SUCCESS).send({ user });
     })

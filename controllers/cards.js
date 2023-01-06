@@ -28,11 +28,11 @@ module.exports.createCard = (req, res) => {
       if (err.name === 'ValidationError') {
         res
           .status(BAD_REQUEST)
-          .send({ message: 'Передан некорректный запрос' }); // здесь нужен next()?
+          .send({ message: 'Передан некорректный запрос' });
       } else if (err.name === 'CastError') {
         res
           .status(BAD_REQUEST)
-          .send({ message: 'Передан некорректный запрос' }); // здесь нужен next()?
+          .send({ message: 'Передан некорректный запрос' });
       } else {
         res
           .status(INTERNAL_SERVER_ERROR)
@@ -45,7 +45,7 @@ module.exports.deleteCardById = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
-        res.status(PAGE_NOT_FOUND).send({ message: 'Данные не найдены' });
+        res.status(PAGE_NOT_FOUND).send({ message: 'Карточка с указанным id не найдена' });
       } else if (!req.params.cardId) {
         res
           .status(BAD_REQUEST)
@@ -57,11 +57,11 @@ module.exports.deleteCardById = (req, res) => {
       if (err.name === 'ValidationError') {
         res
           .status(BAD_REQUEST)
-          .send({ message: 'Передан некорректный запрос' }); // здесь нужен next()?
+          .send({ message: 'Передан некорректный запрос' });
       } else if (err.name === 'CastError') {
         res
           .status(BAD_REQUEST)
-          .send({ message: 'Передан некорректный запрос' }); // здесь нужен next()?
+          .send({ message: 'Передан некорректный запрос' });
       } else {
         res
           .status(INTERNAL_SERVER_ERROR)
@@ -73,11 +73,11 @@ module.exports.deleteCardById = (req, res) => {
 module.exports.likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
+    { $addToSet: { likes: req.user._id } },
     { new: true },
   ).then((card) => {
     if (!card) {
-      res.status(PAGE_NOT_FOUND).send({ message: 'Данные не найдены' });
+      res.status(PAGE_NOT_FOUND).send({ message: 'Передан несуществующий id карточки' });
     }
     res.status(SUCCESS).send({ card });
   })
@@ -85,11 +85,11 @@ module.exports.likeCard = (req, res) => {
       if (err.name === 'ValidationError') {
         res
           .status(BAD_REQUEST)
-          .send({ message: 'Передан некорректный запрос' }); // здесь нужен next()?
+          .send({ message: 'Передан некорректный запрос' });
       } else if (err.name === 'CastError') {
         res
           .status(BAD_REQUEST)
-          .send({ message: 'Передан некорректный запрос' }); // здесь нужен next()?
+          .send({ message: 'Передан некорректный запрос' });
       } else {
         res
           .status(INTERNAL_SERVER_ERROR)
@@ -105,7 +105,7 @@ module.exports.dislikeCard = (req, res) => {
     { new: true },
   ).then((card) => {
     if (!card) {
-      res.status(PAGE_NOT_FOUND).send({ message: 'Данные не найдены' });
+      res.status(PAGE_NOT_FOUND).send({ message: 'Передан несуществующий id карточки' });
     }
     res.status(SUCCESS).send({ card });
   })
@@ -113,11 +113,11 @@ module.exports.dislikeCard = (req, res) => {
       if (err.name === 'ValidationError') {
         res
           .status(BAD_REQUEST)
-          .send({ message: 'Передан некорректный запрос' }); // здесь нужен next()?
+          .send({ message: 'Передан некорректный запрос' });
       } else if (err.name === 'CastError') {
         res
           .status(BAD_REQUEST)
-          .send({ message: 'Передан некорректный запрос' }); // здесь нужен next()?
+          .send({ message: 'Передан некорректный запрос' });
       } else {
         res
           .status(INTERNAL_SERVER_ERROR)
