@@ -89,10 +89,8 @@ module.exports.updateAvatar = (req, res) => {
     { new: true, runValidators: true },
   )
     .then((user) => {
-      if (!user) {
-        res.status(PAGE_NOT_FOUND).send({ message: 'Данные не найдены' });
-      }
-      res.status(SUCCESS).send({ user });
+      res
+        .status(SUCCESS).send({ user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
