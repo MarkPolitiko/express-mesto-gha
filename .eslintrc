@@ -3,6 +3,6 @@
   "rules": {
     "no-underscore-dangle": "off",
     "no-console": "off",
-    "linebreak-style": "off",
+    "linebreak-style": "off"
   }
 }
