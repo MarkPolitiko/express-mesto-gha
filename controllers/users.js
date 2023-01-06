@@ -41,7 +41,7 @@ module.exports.getUserById = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (user === null) {
-        res.status(PAGE_NOT_FOUND).send({ message: 'Данные не найдены' });
+        res.status(PAGE_NOT_FOUND).send({ message: 'Пользователь по указанному id не найден' });
         return;
       }
       res.status(SUCCESS).send({ user });
@@ -50,7 +50,7 @@ module.exports.getUserById = (req, res) => {
       if (err.name === 'CastError') {
         res
           .status(BAD_REQUEST)
-          .send({ message: 'Передан некорректный запрос' });
+          .send({ message: 'Неверный Id' });
         return;
       }
       res
@@ -89,8 +89,10 @@ module.exports.updateAvatar = (req, res) => {
     { new: true, runValidators: true },
   )
     .then((user) => {
-      res
-        .status(SUCCESS).send({ user });
+      if (!user) {
+        res.status(PAGE_NOT_FOUND).send({ message: 'Данные не найдены' });
+      }
+      res.status(SUCCESS).send({ user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
