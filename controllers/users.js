@@ -9,9 +9,6 @@ const {
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => {
-      if (!users) {
-        res.status(PAGE_NOT_FOUND).send({ message: 'Данные не найдены' });
-      }
       res.status(SUCCESS).send({ users });
     })
     .catch(() => res
@@ -74,6 +71,10 @@ module.exports.updateUser = (req, res) => {
         res
           .status(BAD_REQUEST)
           .send({ message: 'Передан некорректный запрос' });
+      } else if (err.name === 'CastError') {
+        res
+          .status(PAGE_NOT_FOUND)
+          .send({ message: 'Пользователь не найден' });
         return;
       }
       res
@@ -99,6 +100,10 @@ module.exports.updateAvatar = (req, res) => {
         res
           .status(BAD_REQUEST)
           .send({ message: 'Передан некорректный запрос' });
+      } else if (err.name === 'CastError') {
+        res
+          .status(PAGE_NOT_FOUND)
+          .send({ message: 'Пользователь не найден' });
         return;
       }
       res
