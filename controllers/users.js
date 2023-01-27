@@ -25,7 +25,9 @@ module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-
+  if (!email || !password) {
+    next(new BadRequestError('Отсутствует email или пароль'));
+  }
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
@@ -33,11 +35,8 @@ module.exports.createUser = (req, res, next) => {
     .then((user) => res.status(SUCCESS).send({
       name: user.name, about: user.about, avatar, email: user.email,
     }))
-
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new BadRequestError('Неверный логин и/или пароль'));
-      } else if (err.name === 'CastError') {
+      if (err.code === 11000) {
         next(new RequestConflictError('Пользователь уже зарегистрирован'));
       } else {
         next(err);
@@ -48,7 +47,7 @@ module.exports.createUser = (req, res, next) => {
 module.exports.getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
-      if (user === null) {
+      if (!user) {
         throw new NotFoundError('Пользователь с указанным id не найден');
       }
       res.status(SUCCESS).send({ user });
@@ -125,8 +124,10 @@ module.exports.updateAvatar = (req, res, next) => {
 
 module.exports.loginUser = (req, res, next) => {
   const { email, password } = req.body;
-
-  return User.findUserByCredentials(email, password)
+  if (!email || !password) {
+    next(new BadRequestError('Отсутствует email или пароль'));
+  }
+  User.findUserByCredentials(email, password)
     .then((user) => {
       if (!user) {
         throw new UnauthorizedError('Ошибка авторизации');
