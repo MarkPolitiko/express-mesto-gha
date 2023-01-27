@@ -2,7 +2,7 @@ const express = require('express');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const { celebrate, Joi } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 // const { PAGE_NOT_FOUND } = require('./utils/constants');
 const rateLimit = require('express-rate-limit');
 
@@ -58,6 +58,8 @@ app.use('/cards', require('./routes/cards'));
 app.use('*', (req, res, next) => {
   next(new NotFoundError('Страница не найдена'));
 });
+
+app.use(errors());
 
 app.use((err, req, res, next) => {
   if (err.statusCode) {
