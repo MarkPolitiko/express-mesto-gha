@@ -6,7 +6,7 @@ const { celebrate, Joi, errors } = require('celebrate');
 // const { PAGE_NOT_FOUND } = require('./utils/constants');
 const rateLimit = require('express-rate-limit');
 
-const { loginUser, createUser } = require('./controllers/users');
+const { loginUser, createUser, unauthorized } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 
 const limiter = rateLimit({
@@ -49,6 +49,8 @@ app.post(
   }),
   createUser,
 );
+
+app.post('/signout', unauthorized);
 
 app.use(auth);
 

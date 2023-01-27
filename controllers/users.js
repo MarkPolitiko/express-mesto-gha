@@ -28,12 +28,21 @@ module.exports.createUser = (req, res, next) => {
   if (!email || !password) {
     next(new BadRequestError('Отсутствует email или пароль'));
   }
-  bcrypt.hash(password, 10)
+  bcrypt
+    .hash(password, 10)
     .then((hash) => User.create({
-      name, about, avatar, email, password: hash,
+      name,
+      about,
+      avatar,
+      email,
+      password: hash,
     }))
     .then((user) => res.status(SUCCESS).send({
-      name: user.name, about: user.about, avatar, email: user.email,
+      _id: user._id,
+      name: user.name,
+      about: user.about,
+      avatar,
+      email: user.email,
     }))
     .catch((err) => {
       if (err.code === 11000) {
@@ -85,8 +94,7 @@ module.exports.updateUser = (req, res, next) => {
     { new: true, runValidators: true },
   )
     .then((user) => {
-      res
-        .status(SUCCESS).send({ user });
+      res.status(SUCCESS).send({ user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -106,9 +114,9 @@ module.exports.updateAvatar = (req, res, next) => {
     { new: true, runValidators: true },
   )
     .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь с указанным id не найден');
-      }
+      // if (!user) {
+      //   throw new NotFoundError('Пользователь с указанным id не найден');
+      // }
       res.status(SUCCESS).send({ user });
     })
     .catch((err) => {
@@ -127,7 +135,7 @@ module.exports.loginUser = (req, res, next) => {
   if (!email || !password) {
     next(new BadRequestError('Отсутствует email или пароль'));
   }
-  User.findUserByCredentials(email, password)
+  User.findOne({ email }).select('+password') // User.findUserByCredentials(email, password)
     .then((user) => {
       if (!user) {
         throw new UnauthorizedError('Ошибка авторизации');
@@ -142,7 +150,7 @@ module.exports.loginUser = (req, res, next) => {
         sameSite: true,
         maxAge: 3600000 * 24 * 7,
       });
-      res.send({ message: 'Авторизация прошла успешно' });
+      res.send({ token });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -151,6 +159,16 @@ module.exports.loginUser = (req, res, next) => {
         next(err);
       }
     });
+};
+
+module.exports.unauthorized = (req, res) => {
+  const token = '';
+  res.cookie('jwt', token, {
+    httpOnly: true,
+    sameSite: true,
+    maxAge: 3600000 * 24 * 7,
+  });
+  res.send({ token });
 };
 
 // exports.createUser = (req, res) => User.create({
