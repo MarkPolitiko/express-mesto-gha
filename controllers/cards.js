@@ -4,9 +4,6 @@ const ForbiddenError = require('../errors/forbiddenErr');
 const Card = require('../models/card');
 const {
   SUCCESS,
-  // BAD_REQUEST,
-  // PAGE_NOT_FOUND,
-  // INTERNAL_SERVER_ERROR,
   CREATED,
 } = require('../utils/constants');
 
@@ -94,9 +91,3 @@ module.exports.dislikeCard = (req, res, next) => {
       }
     });
 };
-
-// module.exports.createCard = (req, res) => Card.create({
-//   name: req.body.name,
-//   link: req.body.link,
-//   owner: req.user._id // используем req.user
-// });

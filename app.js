@@ -3,7 +3,6 @@ const helmet = require('helmet');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { celebrate, Joi, errors } = require('celebrate');
-// const { PAGE_NOT_FOUND } = require('./utils/constants');
 const rateLimit = require('express-rate-limit');
 
 const { loginUser, createUser, unauthorized } = require('./controllers/users');
@@ -14,6 +13,7 @@ const limiter = rateLimit({
   max: 100,
 });
 const NotFoundError = require('./errors/notFoundErr');
+const errorHandler = require('./errors/errHandler');
 
 mongoose.set('strictQuery', true);
 mongoose.connect('mongodb://localhost:27017/mestodb');
@@ -63,14 +63,7 @@ app.use('*', (req, res, next) => {
 
 app.use(errors());
 
-app.use((err, req, res, next) => {
-  if (err.statusCode) {
-    res.status(err.statusCode).send({ message: err.message });
-  } else {
-    res.status(500).send({ message: `На сервере произошла ошибка': ${err.message}` });
-  }
-  next();
-});
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);

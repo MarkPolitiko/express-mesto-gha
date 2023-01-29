@@ -6,11 +6,10 @@ const UnauthorizedError = require('../errors/unauthorizedErr');
 const RequestConflictError = require('../errors/requestConflictErr');
 const User = require('../models/user');
 
+const { JWT_SECRET = 'dev-key' } = process.env;
+
 const {
   SUCCESS,
-  // BAD_REQUEST,
-  // PAGE_NOT_FOUND,
-  // INTERNAL_SERVER_ERROR,
 } = require('../utils/constants');
 
 module.exports.getUsers = (req, res, next) => {
@@ -114,9 +113,6 @@ module.exports.updateAvatar = (req, res, next) => {
     { new: true, runValidators: true },
   )
     .then((user) => {
-      // if (!user) {
-      //   throw new NotFoundError('Пользователь с указанным id не найден');
-      // }
       res.status(SUCCESS).send({ user });
     })
     .catch((err) => {
@@ -135,15 +131,15 @@ module.exports.loginUser = (req, res, next) => {
   if (!email || !password) {
     next(new BadRequestError('Отсутствует email или пароль'));
   }
-  User.findOne({ email }).select('+password') // User.findUserByCredentials(email, password)
+  User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
         throw new UnauthorizedError('Ошибка авторизации');
       }
       const token = jwt.sign(
         { _id: user._id },
-        'some-secret-key',
-        { expiresIn: '7d' }, // токен будет просрочен неделю после создания
+        JWT_SECRET,
+        { expiresIn: '7d' },
       );
       res.cookie('jwt', token, {
         httpOnly: true,
@@ -170,38 +166,3 @@ module.exports.unauthorized = (req, res) => {
   });
   res.send({ token });
 };
-
-// exports.createUser = (req, res) => User.create({
-//   email: req.body.email,
-//   password: req.body.password,
-// })
-//   .then((user) => res.send(user))
-//   .catch((err) => res.status(400).send(err));
-
-// controllers/users.js
-
-// exports.createUser = (req, res) => {
-//   // хешируем пароль
-//     .then(hash => User.create({
-//       email: req.body.email,
-//       password: hash, // записываем хеш в базу
-//     }))
-//     .then((user) => res.send(user))
-//     .catch((err) => res.status(400).send(err));
-// };
-
-// app.post('/signup', (req, res) => {
-//   User.create({
-//   bcrypt.hash(req.body.password, 10)
-//     .then(hash => User.create({
-//       email: req.body.email,
-//       password: hash, // записываем хеш в базу
-//     }))
-//   })
-//     .then((user) => {
-//       res.status(201).send(user);
-//     })
-//     .catch((err) => {
-//       res.status(400).send(err);
-//     });
-// });
